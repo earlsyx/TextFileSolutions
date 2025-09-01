@@ -4,13 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO
+using System.IO;
 namespace DataAccessLibrary
 {
     public class TextFileDataAccess
     {
         public List<ContactModel> ReadAllRecords(string textFile)
         {
+
+            if(File.Exists(textFile) == false)
+            {
+                return new List<ContactModel>();
+            }
+
             var lines = File.ReadAllLines(textFile);
             List<ContactModel> output = new List<ContactModel>();
 
@@ -25,9 +31,14 @@ namespace DataAccessLibrary
                 }
 
                 c.FirstName = vals[0];
+                c.LastName = vals[1];
+                c.EmailAddresses = vals[2].Split(';').ToList();
+                c.PhoneNumbers = vals[3].Split(';').ToList();
 
-                output.Add(c);
+                output.Add(c); 
             }
+
+            return output;
         }
 
         public void WriteAllRecords(List<ContactModel> contacts, string textFile)
